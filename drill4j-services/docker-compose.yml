@@ -1,0 +1,58 @@
+version: "3"
+
+services:
+  drill-admin:
+    image: drill4j/admin:${BACK_VERSION}
+    environment:
+      TEST2CODE_PLUGIN_VERSION: ${TEST2CODE_PLUGIN_VERSION}
+      LOG_LEVEL: INFO
+    ports:
+      - 8090:8090
+    networks:
+      - drill4j
+    volumes:
+     - admin:/work
+
+  admin-ui:
+    image: drill4j/admin-ui:${FRONT_VERSION}
+    environment: 
+      WAIT_HOSTS: host.docker.internal:8090
+      API_HOST: host.docker.internal:8090
+    ports:
+      - 8091:8080
+    networks:
+      - drill4j
+
+  js-agent:
+    image: drill4j/js-agent:${JS_AGENT_VERSION}
+    environment:
+      COVERAGE_SOURCE_APPEND_PREFIX: src/
+      WAIT_HOSTS: drill-admin:8090, mongo:27017
+      DRILL_ADMIN_HOST: drill-admin:8090
+      DRILL_ADMIN_PROTOCOL: ws
+      MONGO_HOST: mongo:27017
+      MONGO_DBNAME: js-agent
+      DEBUG: drill:*
+      DEBUG_COLORS: true
+      FORCE_COLOR: 3
+      DEBUG_LOG_LEVEL: 4
+      PERF_MEASUREMENT_ENABLED: true
+      PERF_DIFFS_ENABLED: true
+    ports:
+      - 8092:8080
+    networks:
+      - drill4j
+
+  mongo:
+    image: mongo:3.4
+    hostname: mongo
+    ports:
+      - 28017:27017
+    networks:
+      - drill4j
+
+networks:
+  drill4j:
+
+volumes:
+  admin:

@@ -1,0 +1,34 @@
+{
+  "sources": {
+    "pattern": [
+      "src/**/*.js"
+    ],
+    "ignore": []
+  },
+  "bundle": {
+    "pattern": [
+      "build/static/**/*.chunk.js"
+    ],
+    "ignore": []
+  },
+  "sourcemaps": {
+    "pattern": [
+      "build/static/**/*.map"
+    ],
+    "ignore": []
+  },
+  "output": {
+    "agentId": "react-redux-realworld-ui",
+    "agentApiUrl": "http://localhost:8092"
+  },
+  "analyzer": {
+    "skipGlobals": true
+  },
+  "buildVersionSource": {
+    "pathToJson": "package.json",
+    "key": "version"
+  },
+  "extensionOptions": {
+    "adminUrl": "http://localhost:8090"
+  }
+}
