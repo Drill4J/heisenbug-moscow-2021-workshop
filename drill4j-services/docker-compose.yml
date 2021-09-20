@@ -33,11 +33,11 @@ services:
       MONGO_HOST: mongo:27017
       MONGO_DBNAME: js-agent
       DEBUG: drill:*
-      DEBUG_COLORS: true
+      DEBUG_COLORS: "true"
       FORCE_COLOR: 3
       DEBUG_LOG_LEVEL: 4
-      PERF_MEASUREMENT_ENABLED: true
-      PERF_DIFFS_ENABLED: true
+      PERF_MEASUREMENT_ENABLED: "true"
+      PERF_DIFFS_ENABLED: "true"
     ports:
       - 8092:8080
     networks:
