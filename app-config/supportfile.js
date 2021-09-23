@@ -13,4 +13,3 @@ window.appAgent = agent;
 import cypressGrep from 'cypress-grep'
 cypressGrep()
 // --- NEW
-

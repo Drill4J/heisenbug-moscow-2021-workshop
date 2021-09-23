@@ -22,7 +22,11 @@ before((done) => {
 });
 
 after((done) => {
-  drillAutotestAgent.finish().then(() => done());
+  if (drillAutotestAgent) {
+    drillAutotestAgent.finish().then(() => done());
+  } else {
+    console.log(`%c No instance of @drill4j/js-auto-test-agent is created, data won't be sent`, 'background: red; color: white');
+  }
 });
 
 // Inject "test-name" and "session-id" Drill4J headers for each request made during test
@@ -47,7 +51,12 @@ afterEach(function (done) {
       const testName = getTestName(currentTest);
       await drillAutotestAgent.addJsCoverage({ coverage: coverageData.result, testName });
       const { state, duration, wallClockStartedAt } = currentTest;
-      drillAutotestAgent.addTest(testName, convertTestState(state), wallClockStartedAt.valueOf(), duration);
+      drillAutotestAgent.addTest(testName, convertTestState(state), wallClockStartedAt.valueOf(), duration, {
+        hash: testName, // FIXME once test name hashes for test2runs are implemented in Drill4J Backend
+        data: {
+          specFilePath: currentTest.invocationDetails.relativeFile
+        },
+      });
     })
     .then(()=>done());  
 });
@@ -73,8 +82,8 @@ function convertTestState(state) {
 function getTestName(currentTest) {
   // Cypress assumes test name separator to be ' '
   // one might change it to the desired character
-  // e.g. to display "better" names in Drill4J Admin Panel
-  // but then it __have__ to be replaced in test2run.sh before feeding test names to cypress-grep
+  // e.g. with '/' to display "prettier" names in Drill4J Admin Panel
+  // but then '/' __have__ to be replaced with ' ' in test2run.sh before feeding test names to cypress-grep
   const testNameSeparator = ' ';
   const parentName = getParentNameChain(currentTest)
     .filter(x => x)

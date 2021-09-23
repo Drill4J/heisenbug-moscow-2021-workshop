@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 printhelp="false"
 
 while getopts ":h" OPTKEY; do
@@ -33,14 +33,15 @@ then
   exit 1
 fi
 
-tests2run=$(curl -s -H "accept: application/json" -H "content-type: application/json" -X GET $DRILL_ADMIN_URL/api/agents/$DRILL_AGENT_ID/plugins/test2code/data/tests-to-run)
-formatted=$(jq -r '.byType.AUTO | map(.name) | join ("; ")' <<< $tests2run)
-echo $formatted
+URL="${DRILL_ADMIN_URL%$'\r'}/api/agents/${DRILL_AGENT_ID%$'\r'}/plugins/test2code/data/tests-to-run"
 
+tests2run=$(curl -s -H "accept: application/json" -H "content-type: application/json" -X GET "$URL")
+
+tests=$(jq -r '.byType.AUTO | map(.name) | join ("; ")' <<< $tests2run)
+specs=$(jq -r '.byType.AUTO | map(.metadata.data.specFilePath) | unique | join (",")' <<< $tests2run)
+
+echo "--spec \"${specs}\" --env grep=\"${tests}\""
 # TIP: launch tests using tests2runs:
-#
-#   Cypress local installation
-#   node_modules/.bin/cypress run --env grep="$(./tests2run.sh)"
-#
-#   Cypress global installation
-#   npx cypress run --env grep="$(./tests2run.sh)"
+#   node_modules/.bin/cypress run $(./tests2run.sh)
+#   or
+#   npx cypress run $(./tests2run.sh)

@@ -89,30 +89,42 @@
     - Установить [@drill4j/js-auto-test-agent](https://www.npmjs.com/package/@drill4j/js-auto-test-agent)
         - `npm i --save-dev @drill4j/js-auto-test-agent`
         - Копировать [drill4j-integration.js](./app-config/drill4j-integration.js)
-        - Добавить в .env DRILL_AGENT_ID и DRILL_ADMIN_URL [`cypress.json`](./app-config/cypress.json)
-        - Импортировать `drill4j-integration.js` в `support/index.js`
+        - Добавить DRILL_AGENT_ID и DRILL_ADMIN_URL в поле "env" в [cypress.json](./app-config/cypress.json)
+        - Импортировать `drill4j-integration.js` в [support/index.js](./app-config/supportfile.js)
 
     - Запустить тесты
         - `node_modules/.bin/cypress run`
 
-    - Открыть Drill4J Admin Panel http://localhost:8091 и посмотреть на собранные данные
+    - Открыть Drill4J Admin Panel http://localhost:8091
+
+    - Перейти на [страницу агента](http://localhost:8091/full-page/react-redux-realworld-ui/0.1.0/test2code/dashboard/methods)
+
+    - Дождаться окончания тестов
+
+    - ***ВАЖНО***: сохранить данные нажатием кнопки "Finish scope"
+
+    Шаг 1.5 - изменить код [см. раздел ниже](#new-build)
 
     Шаг 2 - Использовать рекомендации по запуску тестов (test2runs)
 
     - Установить Cypress grep `npm i --save-dev cypress-grep`
     - Установить [jq](https://github.com/stedolan/jq/releases) (для преобразования JSON от Drill4J в строку для cypress-grep)
-    - Импортировать cypress-grep в `support/index.js`
+    - Импортировать cypress-grep в [support/index.js](./app-config/supportfile.js)
     - Использовать скрипт [`tests2run.sh`](./app-config/tests2run.sh) для запуска тестов с test2run-ами
 
-## При каждом новом билде
-- увеличить версию, перебилдить, отправить данные в Drill4J
->
->    ```shell
->      npm version minor && \
->      npm run build && \
->      npx @drill4j/js-parser && \ # анализирует исходники + билд + сорсмапы, отправляет данные в Drill4J
->      docker-compose build --no-cache && \
->      docker-compose down && \
->      docker-compose up -d
->      
->   ```
+## New build
+
+- Поменять что-то в исходниках (изменить существующие функции, можно еще и добавить новые)
+
+- ***ВАЖНО***: Увеличить версию - package.json, поле `"version"`
+
+- Перебилдить, отправить данные в Drill4J
+
+```shell
+    npm run build && \
+    npx @drill4j/js-parser && \
+    docker-compose build --no-cache && \
+    docker-compose down && \
+    docker-compose up -d
+    
+```
