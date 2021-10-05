@@ -79,6 +79,8 @@
         - `npx @drill4j/js-parser --dry`
     - Проанализировать приложение (с отправкой данный в Drill4J)
         - `npx @drill4j/js-parser`
+    - <span style="color:green"> **Напоминание спикеру:** Объяснить COVERAGE_SOURCE_OMIT_PREFIX / COVERAGE_SOURCE_APPEND_PREFIX </span>
+
 
 3. Зарегистрировать приложение в Drill4J Admin Panel http://localhost:8091
 
