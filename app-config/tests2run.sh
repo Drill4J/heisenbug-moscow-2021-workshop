@@ -40,8 +40,10 @@ tests2run=$(curl -s -H "accept: application/json" -H "content-type: application/
 tests=$(jq -r '.byType.AUTO | map(.name) | join ("; ")' <<< $tests2run)
 specs=$(jq -r '.byType.AUTO | map(.metadata.data.specFilePath) | unique | join (",")' <<< $tests2run)
 
-echo "--spec \"${specs}\" --env grep=\"${tests}\""
-# TIP: launch tests using tests2runs:
-#   node_modules/.bin/cypress run $(./tests2run.sh)
-#   or
-#   npx cypress run $(./tests2run.sh)
+echo 'specs to run'
+echo $specs
+
+echo 'tests to run'
+echo $tests
+
+node_modules/.bin/cypress run --spec="${specs}" --env grep="${tests}"
