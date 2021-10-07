@@ -1,7 +1,7 @@
 {
   "baseUrl": "http://localhost:4100",
   "video": false,
-  "defaultCommandTimeout": 20000,
+  "defaultCommandTimeout": 60000,
   "env": {
     "apiUrl": "http://localhost:4102/api",
     "DRILL_AGENT_ID": "react-redux-realworld-ui",
